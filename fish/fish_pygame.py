@@ -16,7 +16,7 @@ black = 0, 0, 0
 
 screen = pygame.display.set_mode(size)
 
-ball = pygame.image.load("/home/mattb/code/python/python_flat/fish_game/block.png")
+ball = pygame.image.load("fish/block.png")
 ballrect = ball.get_rect()
 ballrect.y = 300
 ballrect.move
