@@ -48,7 +48,7 @@ class Fish():
     def update(self):
         self.rect = self.rect.move(self.speed)
 
-       
+
 # Initial pop-up screen size
 x_width = 500
 y_width = 500
@@ -58,7 +58,7 @@ black = 10, 50, 100
 size = width, height = x_width, y_width
 screen = pygame.display.set_mode(size)
 
-# basic font 
+# basic font
 base_font = pygame.font.Font(None, 32)
 base_font2=pygame.font.Font(None, 16)
 user_text = '800'
@@ -73,7 +73,7 @@ textRect = pygame.Rect(150,150,140,32)
 text2Rect= pygame.Rect(175,300,140,32)
 text3Rect = pygame.Rect(120,210,140,32)
 text4Rect= pygame.Rect(120,260,140,32)
-  
+
 # create rectangle
 input_rect = pygame.Rect(200, 200, 140, 32)
 input_rect2 = pygame.Rect(200, 250, 140, 32)
@@ -81,7 +81,7 @@ input_rect2 = pygame.Rect(200, 250, 140, 32)
 # color_active stores color(lightskyblue3) which
 # gets active when input box is clicked by user
 color_active = pygame.Color('lightskyblue3')
-  
+
 # color_passive store color(chartreuse4) which is
 # color of input box.
 color_passive = pygame.Color('chartreuse4')
@@ -96,7 +96,7 @@ done = False
 # Loop for the first input screen
 while True:
     for event in pygame.event.get():
-  
+
       # if user types QUIT then the screen will close
         if event.type == pygame.QUIT:
             pygame.quit()
@@ -111,13 +111,13 @@ while True:
                 active2 = True
             else:
                 active2 = False
-            
-                
+
+
         if event.type == pygame.KEYDOWN:
-            
+
             if event.key == pygame.K_RETURN:
                     done=True
-            
+
             if active1:
                 # Check for backspace
                 if event.key == pygame.K_BACKSPACE:
@@ -140,44 +140,44 @@ while True:
             # formation
                 else:
                     user_text2 += event.unicode
-      
+
     # it will set background color of screen
     screen.fill((255, 255, 255))
-  
+
     if active1:
         color1 = color_active
     else:
         color1 = color_passive
-    
+
     if active2:
         color2 = color_active
     else:
         color2 = color_passive
-          
+
     # draw rectangle and argument passed which should
     # be on screen
     pygame.draw.rect(screen, color1, input_rect)
     pygame.draw.rect(screen, color2, input_rect2)
     text_surface = base_font.render(user_text, True, (255, 255, 255))
     text_surface2= base_font.render(user_text2, True, (255, 255, 255))
-    
+
     # render at position stated in arguments
     screen.blit(text_surface, (input_rect.x+5, input_rect.y+5))
-    screen.blit(text_surface2, (input_rect2.x+5, input_rect2.y+5)) 
+    screen.blit(text_surface2, (input_rect2.x+5, input_rect2.y+5))
     screen.blit(text, textRect)
     screen.blit(text2, text2Rect)
     screen.blit(text3, text3Rect)
     screen.blit(text4, text4Rect)
     # set width of textfield so that text cannot get
     # outside of user's text input
-        
+
     input_rect.w = max(100, text_surface.get_width()+10)
     input_rect2.w = max(100, text_surface2.get_width()+10)
 
     # display.flip() will update only a portion of the
     # screen to updated, not full area
     pygame.display.flip()
-      
+
     # clock.tick(60) means that for every second at most
     # 60 frames should be passed.
     clock.tick(60)
@@ -201,7 +201,7 @@ for fish_idx in range(n_fish):
     school_of_fish.append(Fish(path, x_width, y_width))
 
 pygame.mixer.init() # Initialize music mixer
-pygame.mixer.music.load("guiles-theme.mp3") # Load background music
+pygame.mixer.music.load("guiles-theme.wav") # Load background music
 pygame.mixer.music.play(-1,0,0) # Starts playing music. (loops, maxtime, fade_ms)
                                 # If loops input is -1, it keeps looping forever.
 
@@ -209,7 +209,7 @@ pygame.mixer.music.play(-1,0,0) # Starts playing music. (loops, maxtime, fade_ms
 while 1:
     for event in pygame.event.get():
         if event.type == pygame.QUIT: sys.exit()
-        elif event.type == pygame.KEYDOWN: 
+        elif event.type == pygame.KEYDOWN:
             if event.key == pygame.K_ESCAPE: # Quits when you press ESCAPE
                 pygame.quit()
                 sys.exit()
