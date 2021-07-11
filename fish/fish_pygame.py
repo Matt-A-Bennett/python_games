@@ -48,7 +48,7 @@ x_width = 1920
 y_width = 1080
 n_fish = 20
 
-black = 0, 0, 0
+black = 10, 50, 100
 size = width, height = x_width, y_width
 screen = pygame.display.set_mode(size)
 
