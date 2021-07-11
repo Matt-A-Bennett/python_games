@@ -23,7 +23,7 @@ class Fish():
             self.fish = pygame.transform.flip(self.fish, True, False)
             self.rect = self.fish.get_rect()
             self.rect.y = np.random.randint(1,y_width)
-            self.rect.x = 0
+            self.rect.x = -150
             self.speed = [np.random.randint(1, 5), 0]
         if side == 2:
             self.rect = self.fish.get_rect()
@@ -40,7 +40,7 @@ class Fish():
             self.fish = pygame.transform.rotate(self.fish, 90)
             self.rect = self.fish.get_rect()
             self.rect.x = np.random.randint(1,x_width)
-            self.rect.y = 0
+            self.rect.y = -150
             self.speed = [0, np.random.randint(1, 5)]
 
         self.fish = pygame.transform.scale(self.fish, (self.size, self.size))
@@ -218,7 +218,7 @@ while 1:
     for fish_idx in range(n_fish):
         tmp_fish = school_of_fish[fish_idx]
         tmp_fish.update()
-        if (tmp_fish.rect[0] < 0) or (tmp_fish.rect[0] > x_width) or (tmp_fish.rect[1] < 0) or (tmp_fish.rect[1] > y_width):
+        if (tmp_fish.rect[0] < -150) or (tmp_fish.rect[0] > x_width) or (tmp_fish.rect[1] < -150) or (tmp_fish.rect[1] > y_width):
             school_of_fish[fish_idx] = Fish(path, x_width, y_width)
 
         screen.blit(tmp_fish.fish, tmp_fish.rect)
