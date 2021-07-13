@@ -3,8 +3,6 @@ import pygame as pg
 import numpy as np
 pg.init()
 
-
-
 path=os.getcwd() # Automaticlaly gets the current directory
 path=path+"/" # adds / at the end of it. (might need to adapt for linux later)
 #path = '/home/mattb/code/python/python_flat/games/fish/'
