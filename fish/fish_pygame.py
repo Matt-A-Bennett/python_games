@@ -3,6 +3,8 @@ import pygame as pg
 import numpy as np
 pg.init()
 
+
+
 path=os.getcwd() # Automaticlaly gets the current directory
 path=path+"/" # adds / at the end of it. (might need to adapt for linux later)
 #path = '/home/mattb/code/python/python_flat/games/fish/'
@@ -22,24 +24,24 @@ class Fish_AI():
             self.rect = self.fish.get_rect()
             self.rect.y = np.random.randint(1,height)
             self.rect.x = -150
-            self.speed = [np.random.randint(1, 5), 0]
+            self.speed = [np.random.rand()*5, 0]
         if side == 2:
             self.rect = self.fish.get_rect()
             self.rect.y = np.random.randint(1,height)
             self.rect.x = width
-            self.speed = [-np.random.randint(1, 5), 0]
+            self.speed = [-np.random.rand()*5, 0]
         if side == 3:
             self.fish = pg.transform.rotate(self.image, 270)
             self.rect = self.fish.get_rect()
             self.rect.x = np.random.randint(1,width)
             self.rect.y = height
-            self.speed = [0, -np.random.randint(1, 5)]
+            self.speed = [0, -np.random.rand()*5]
         if side == 4:
             self.fish = pg.transform.rotate(self.image, 90)
             self.rect = self.fish.get_rect()
             self.rect.x = np.random.randint(1,width)
             self.rect.y = -150
-            self.speed = [0, np.random.randint(1, 5)]
+            self.speed = [0, np.random.rand()*5]
 
         self.fish = pg.transform.scale(self.fish, (self.size, self.size))
 
