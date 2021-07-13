@@ -77,8 +77,6 @@ background_color = 10, 50, 100
 n_fish = 20
 friction_coef = 0.98
 
-player = FishPlayer(path)
-
 # basic font
 base_font = pg.font.Font(None, 32)
 base_font2=pg.font.Font(None, 16)
@@ -209,16 +207,22 @@ width=int(user_text)
 height=int(user_text2)
 screen = pg.display.set_mode([width, height])
 
+# Keys are automatically set to released every millisecond. This means we stop
+# accelerating the player fish as soon as the key is released
 pg.key.set_repeat(1)
-
-school_of_fish = []
-for fish_idx in range(n_fish):
-    school_of_fish.append(Fish_AI(path, width, height))
 
 pg.mixer.init() # Initialize music mixer
 pg.mixer.music.load("guiles-theme.wav") # Load background music
 pg.mixer.music.play(-1,0,0) # Starts playing music. (loops, maxtime, fade_ms)
                                 # If loops input is -1, it keeps looping forever.
+
+player = FishPlayer(path)
+
+school_of_fish = []
+for fish_idx in range(n_fish):
+    school_of_fish.append(Fish_AI(path, width, height))
+
+# GAME LOOP
 while True:
     for event in pg.event.get():
         if event.type == pg.QUIT: sys.exit()
