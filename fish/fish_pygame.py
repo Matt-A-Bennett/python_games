@@ -307,7 +307,7 @@ while True:
 
     if make_gif:
         screenshot_count += 1
-        if screenshot_count % 30 == 0:
+        if screenshot_count % 10 == 0:
             Capture(screen,f"screenshots/screenshot{screenshot_count}.jpeg",(0,0),(1920, 1080))
 
     # time.sleep(0.01)
