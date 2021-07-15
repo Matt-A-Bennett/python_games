@@ -322,6 +322,5 @@ if make_gif:
     images = []
     for filename in filenames:
         images.append(imageio.imread(filename))
-        images.append(imageio.imread(filename))
 
     imageio.mimsave('gifs/fish_gameplay.gif', images)
