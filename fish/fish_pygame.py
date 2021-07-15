@@ -8,6 +8,11 @@ path=path+"/" # adds / at the end of it. (might need to adapt for linux later)
 #path = '/home/mattb/code/python/python_flat/games/fish/'
 #path = 'C:/Users/canoluk/Desktop/GitHub/python_games/fish/'
 
+def Capture(display,name,pos,size): # (pygame Surface, String, tuple, tuple)
+    image = pg.Surface(size)  # Create image surface
+    image.blit(display,(0,0),(pos,size))  # Blit portion of the display to the image
+    pg.image.save(image,name)  # Save the image to the disk**
+
 class Fish_AI():
     def __init__(self, path, width, height):
         self.size = np.random.randint(25, 124)
@@ -93,12 +98,13 @@ class FishPlayer():
 background_color = 10, 50, 100
 n_fish = 20
 friction_coef = 0.98
+make_gif = False
 
 # basic font
 base_font = pg.font.Font(None, 32)
 base_font2=pg.font.Font(None, 16)
-user_text = '800'
-user_text2= '600'
+user_text = '1920'
+user_text2= '1080'
 
 screen = pg.display.set_mode([int(user_text), int(user_text2)])
 
@@ -228,6 +234,12 @@ screen = pg.display.set_mode([width, height])
 # accelerating the player fish as soon as the key is released
 pg.key.set_repeat(1)
 
+if make_gif:
+    if not os.path.isdir('screenshots'):
+        os.makedirs('screenshots')
+
+    screenshot_count = 0
+
 pg.mixer.init() # Initialize music mixer
 pg.mixer.music.load("guiles-theme.wav") # Load background music
 pg.mixer.music.play(-1,0,0) # Starts playing music. (loops, maxtime, fade_ms)
@@ -287,9 +299,29 @@ while True:
     # add some friction
     player.speed[0] = player.speed[0]*friction_coef
     player.speed[1] = player.speed[1]*friction_coef
-
     player.update()
+
     screen.blit(player.fish, player.rect)
 
     pg.display.flip()
+
+    if make_gif:
+        screenshot_count += 1
+        if screenshot_count % 10 == 0:
+            Capture(screen,f"screenshots/screenshot{screenshot_count}.jpeg",(0,0),(1920, 1080))
+
     # time.sleep(0.01)
+
+if make_gif:
+    import imageio, glob
+    filenames = []
+    for filename in glob.glob('screenshots/screenshot*jpeg'):
+        filenames.append(filename)
+    filenames.sort(key=os.path.getctime)
+
+    images = []
+    for filename in filenames:
+        images.append(imageio.imread(filename))
+
+    imageio.mimsave('fish_gameplay.gif', images)
+

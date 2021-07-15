@@ -2,4 +2,4 @@
 
 ## Fish game based on Hungry Space:
 
-![game_screenshot](fish/game_screenshot.png)
+![fish_gameplay](fish/fish_gameplay.gif)
