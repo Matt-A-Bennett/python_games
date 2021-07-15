@@ -98,7 +98,7 @@ class FishPlayer():
 background_color = 10, 50, 100
 n_fish = 20
 friction_coef = 0.98
-make_gif = True
+make_gif = False
 
 # basic font
 base_font = pg.font.Font(None, 32)
