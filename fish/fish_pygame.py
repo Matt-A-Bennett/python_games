@@ -235,6 +235,9 @@ screen = pg.display.set_mode([width, height])
 pg.key.set_repeat(1)
 
 if make_gif:
+    if not os.path.isdir('gifs/screenshots'):
+        os.mkdir('gifs/screenshots')
+
     screenshot_count = 0
 
 pg.mixer.init() # Initialize music mixer
@@ -305,19 +308,20 @@ while True:
     if make_gif:
         screenshot_count += 1
         if screenshot_count % 30 == 0:
-            Capture(screen,f"screenshot{screenshot_count}.jpeg",(0,0),(1920, 1080))
+            Capture(screen,f"gifs/screenshots/screenshot{screenshot_count}.jpeg",(0,0),(1920, 1080))
 
     # time.sleep(0.01)
 
 if make_gif:
-    import imageio, glob, os
+    import imageio, glob
     filenames = []
-    for filename in glob.glob('screenshot*jpeg'):
+    for filename in glob.glob('gifs/screenshots/screenshot*jpeg'):
         filenames.append(filename)
     filenames.sort(key=os.path.getctime)
 
     images = []
     for filename in filenames:
         images.append(imageio.imread(filename))
+        images.append(imageio.imread(filename))
 
-    imageio.mimsave('fish_gameplay.gif', images)
+    imageio.mimsave('gifs/fish_gameplay.gif', images)
