@@ -15,42 +15,33 @@ class Fish_AI():
         colors = ['red', 'orange', 'green', 'blue']
         self.image = pg.image.load(f"{path}fish_{colors[color_ind]}.png")
         self.fish = self.image
-        self.fish = pg.transform.scale(self.fish, (self.size, self.size))
-        self.mask = pg.mask.from_surface(self.fish)
-        self.scale = self.mask.count()
 
         side = np.random.randint(1,5)
         if side == 1:
-            self.fish = pg.transform.flip(self.fish, True, False)
+            self.fish = pg.transform.flip(self.image, True, False)
             self.rect = self.fish.get_rect()
             self.rect.y = np.random.randint(1,height)
             self.rect.x = -150
-            self.speed = [np.random.randint(1, 4), 0]
+            self.speed = [np.random.randint(1, 5), 0]
         if side == 2:
             self.rect = self.fish.get_rect()
             self.rect.y = np.random.randint(1,height)
             self.rect.x = width
-            self.speed = [-np.random.randint(1, 4), 0]
+            self.speed = [-np.random.randint(1, 5), 0]
         if side == 3:
-            self.fish = pg.transform.rotate(self.fish, 270)
+            self.fish = pg.transform.rotate(self.image, 270)
             self.rect = self.fish.get_rect()
             self.rect.x = np.random.randint(1,width)
             self.rect.y = height
-            self.speed = [0, -np.random.randint(1, 4)]
+            self.speed = [0, -np.random.randint(1, 5)]
         if side == 4:
-            self.fish = pg.transform.rotate(self.fish, 90)
+            self.fish = pg.transform.rotate(self.image, 90)
             self.rect = self.fish.get_rect()
             self.rect.x = np.random.randint(1,width)
             self.rect.y = -150
-            self.speed = [0, np.random.randint(1, 4)]
+            self.speed = [0, np.random.randint(1, 5)]
 
-    def eaten(self, player_mask, player_rect):
-        if player_mask.overlap(self.mask,
-                                   (self.rect[0] - player_rect[0],
-                                    self.rect[1] - player_rect[1])):
-            return player.scale > self.scale
-        else:
-            return None
+        self.fish = pg.transform.scale(self.fish, (self.size, self.size))
 
     def update(self):
         self.rect = self.rect.move(self.speed)
@@ -60,23 +51,15 @@ class FishPlayer():
         self.size = 50
         self.image = pg.image.load(f"{path}fish_player.png")
         self.fish = pg.transform.scale(self.image, (self.size, self.size))
-        self.mask = pg.mask.from_surface(self.fish)
-        self.scale = self.mask.count()
-        self.fed = 0
         self.speed = [0, 0]
         self.max_speed = 8
-        self.acceleration = 0.04
+        self.acceleration = 0.1
         self.facing = 'left'
         self.rect = self.fish.get_rect()
         self.rect.x = 400
         self.rect.y = 300
 
     def update(self):
-        if self.fed:
-            self.fish = pg.transform.scale(self.image, (self.size, self.size))
-            self.facing = 'left'
-            self.fed = 0
-
         if self.speed[0] > 0 and self.facing == 'left' or self.speed[0] < 0 and self.facing == 'right':
             x = self.rect.x
             y = self.rect.y
@@ -231,7 +214,7 @@ pg.key.set_repeat(1)
 pg.mixer.init() # Initialize music mixer
 pg.mixer.music.load("guiles-theme.wav") # Load background music
 pg.mixer.music.play(-1,0,0) # Starts playing music. (loops, maxtime, fade_ms)
-                            # If loops input is -1, it keeps looping forever.
+                                # If loops input is -1, it keeps looping forever.
 
 player = FishPlayer(path)
 
@@ -250,24 +233,12 @@ while True:
 
     screen.fill(background_color)
 
-    player_mask = pg.mask.from_surface(player.fish)
     # update all the AI fish
     for fish_idx in range(n_fish):
         tmp_fish = school_of_fish[fish_idx]
         tmp_fish.update()
-
         if (tmp_fish.rect[0] < -150) or (tmp_fish.rect[0] > width) or (tmp_fish.rect[1] < -150) or (tmp_fish.rect[1] > height):
             school_of_fish[fish_idx] = Fish_AI(path, width, height)
-
-        # check if the fish_ai was eaten or ate the player (None means no contact)
-        eaten = tmp_fish.eaten(player_mask, player.rect)
-        if eaten == True:
-            school_of_fish[fish_idx] = Fish_AI(path, width, height)
-            player.fed = 1
-            player.size += 2
-        elif eaten == False:
-            pg.quit()
-            sys.exit()
 
         screen.blit(tmp_fish.fish, tmp_fish.rect)
 
@@ -292,4 +263,4 @@ while True:
     screen.blit(player.fish, player.rect)
 
     pg.display.flip()
-    # time.sleep(0.01)
+    time.sleep(0.01)
