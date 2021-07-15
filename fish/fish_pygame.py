@@ -1,17 +1,30 @@
-import sys, os, time
-import pygame as pg
+import sys, os, time, glob, imageio
 import numpy as np
+import pygame as pg
 pg.init()
 
 path=os.getcwd() # Automaticlaly gets the current directory
-path=path+"/" # adds / at the end of it. (might need to adapt for linux later)
-#path = '/home/mattb/code/python/python_flat/games/fish/'
+path=path+"/" # adds / at the end of it.
 #path = 'C:/Users/canoluk/Desktop/GitHub/python_games/fish/'
+gif_screenshots_path = f'{path}screenshots2/'
+gif_name=f'{path}fish_gameplay2.gif'
 
 def Capture(display,name,pos,size): # (pygame Surface, String, tuple, tuple)
     image = pg.Surface(size)  # Create image surface
     image.blit(display,(0,0),(pos,size))  # Blit portion of the display to the image
     pg.image.save(image,name)  # Save the image to the disk**
+
+def MakeGif(gif_name):
+    print(f'Making gif: {gif_name}')
+    filenames = []
+    for filename in glob.glob(f'{gif_screenshots_path}*jpeg'):
+        filenames.append(filename)
+    filenames.sort(key=os.path.getctime)
+    images = []
+
+    for filename in filenames:
+        images.append(imageio.imread(filename))
+    imageio.mimsave(gif_name, images)
 
 class Fish_AI():
     def __init__(self, path, width, height):
@@ -62,24 +75,27 @@ class Fish_AI():
 
 class FishPlayer():
     def __init__(self, path):
-        self.size = 50
         self.image = pg.image.load(f"{path}fish_player.png")
-        self.fish = pg.transform.scale(self.image, (self.size, self.size))
-        self.mask = pg.mask.from_surface(self.fish)
-        self.scale = self.mask.count()
-        self.fed = 0
+        self.facing = 'left'
+        self.rect = self.image.get_rect()
+        self.rect.x = 400
+        self.rect.y = 300
+
+        self.size = 50
+        self.player_growth_rate = 2
         self.speed = [0, 0]
         self.max_speed = 8
         self.acceleration = 0.04
-        self.facing = 'left'
-        self.rect = self.fish.get_rect()
-        self.rect.x = 400
-        self.rect.y = 300
+        self.fed = 1
+        self.update()
 
     def update(self):
         if self.fed:
             self.fish = pg.transform.scale(self.image, (self.size, self.size))
+            self.mask = pg.mask.from_surface(self.fish)
+            self.scale = self.mask.count()
             self.facing = 'left'
+            self.size += self.player_growth_rate
             self.fed = 0
 
         if self.speed[0] > 0 and self.facing == 'left' or self.speed[0] < 0 and self.facing == 'right':
@@ -98,6 +114,8 @@ class FishPlayer():
 background_color = 10, 50, 100
 n_fish = 20
 friction_coef = 0.98
+
+# make a quick gif to showcase the gameplay (don't play for too long on this!)
 make_gif = False
 
 # basic font
@@ -235,10 +253,9 @@ screen = pg.display.set_mode([width, height])
 pg.key.set_repeat(1)
 
 if make_gif:
-    if not os.path.isdir('screenshots'):
-        os.makedirs('screenshots')
-
     screenshot_count = 0
+    if not os.path.isdir(gif_screenshots_path):
+        os.makedirs(gif_screenshots_path)
 
 pg.mixer.init() # Initialize music mixer
 pg.mixer.music.load("guiles-theme.wav") # Load background music
@@ -253,12 +270,30 @@ for fish_idx in range(n_fish):
 
 # GAME LOOP
 while True:
+    pg.event.pump()
     for event in pg.event.get():
-        if event.type == pg.QUIT: sys.exit()
+        # deal with game exit/quit
+        if event.type == pg.QUIT or (event.type == pg.KEYDOWN and event.key == pg.K_ESCAPE):
+            pg.quit()
+            if make_gif:
+                MakeGif(gif_name)
+            sys.exit()
         elif event.type == pg.KEYDOWN:
-            if event.key == pg.K_ESCAPE: # Quits when you press ESCAPE
-                pg.quit()
-                sys.exit()
+            # if event.key == pg.K_ESCAPE: # Quits when you press ESCAPE
+            #     pg.quit()
+            #     if make_gif:
+            #         MakeGif(gif_name)
+            #     sys.exit()
+            # alter speed in repsonse to keypresses
+            if event.type == pg.KEYDOWN:
+                if event.key == pg.K_UP and player.speed[1] > -player.max_speed:
+                    player.speed[1] -= player.acceleration
+                if event.key == pg.K_DOWN and player.speed[1] < player.max_speed:
+                    player.speed[1] += player.acceleration
+                if event.key == pg.K_RIGHT and player.speed[0] < player.max_speed:
+                    player.speed[0] += player.acceleration
+                if event.key == pg.K_LEFT and player.speed[0] > -player.max_speed:
+                    player.speed[0] -= player.acceleration
 
     screen.fill(background_color)
 
@@ -276,25 +311,13 @@ while True:
         if eaten == True:
             school_of_fish[fish_idx] = Fish_AI(path, width, height)
             player.fed = 1
-            player.size += 2
         elif eaten == False:
             pg.quit()
+            if make_gif:
+                MakeGif(gif_name)
             sys.exit()
 
         screen.blit(tmp_fish.fish, tmp_fish.rect)
-
-    # alter speed in repsonse to keypresses
-    pg.event.pump()
-    for event in pg.event.get():
-        if event.type == pg.KEYDOWN:
-            if event.key == pg.K_UP and player.speed[1] > -player.max_speed:
-                player.speed[1] -= player.acceleration
-            if event.key == pg.K_DOWN and player.speed[1] < player.max_speed:
-                player.speed[1] += player.acceleration
-            if event.key == pg.K_RIGHT and player.speed[0] < player.max_speed:
-                player.speed[0] += player.acceleration
-            if event.key == pg.K_LEFT and player.speed[0] > -player.max_speed:
-                player.speed[0] -= player.acceleration
 
     # add some friction
     player.speed[0] = player.speed[0]*friction_coef
@@ -308,20 +331,7 @@ while True:
     if make_gif:
         screenshot_count += 1
         if screenshot_count % 10 == 0:
-            Capture(screen,f"screenshots/screenshot{screenshot_count}.jpeg",(0,0),(1920, 1080))
+            Capture(screen,f"{gif_screenshots_path}screenshot{screenshot_count}.jpeg",(0,0),(width, height))
 
     # time.sleep(0.01)
-
-if make_gif:
-    import imageio, glob
-    filenames = []
-    for filename in glob.glob('screenshots/screenshot*jpeg'):
-        filenames.append(filename)
-    filenames.sort(key=os.path.getctime)
-
-    images = []
-    for filename in filenames:
-        images.append(imageio.imread(filename))
-
-    imageio.mimsave('fish_gameplay.gif', images)
 
