@@ -98,7 +98,7 @@ class FishPlayer():
 background_color = 10, 50, 100
 n_fish = 20
 friction_coef = 0.98
-make_gif = False
+make_gif = True
 
 # basic font
 base_font = pg.font.Font(None, 32)
@@ -236,7 +236,7 @@ pg.key.set_repeat(1)
 
 if make_gif:
     if not os.path.isdir('gifs/screenshots'):
-        os.mkdir('gifs/screenshots')
+        os.makedirs('gifs/screenshots')
 
     screenshot_count = 0
 
