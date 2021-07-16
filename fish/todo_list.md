@@ -15,7 +15,7 @@ Original game: https://www.newgrounds.com/portal/view/319993
 - [x] Keyboard presses
 - [x] Collision events ()
 - [x] Keep track of how big our fish is
-- [ ] Pop out at the end of the screen
+- [ ] Wrap around at edges of the screen
 - [ ] Visual effect when eating / getting eaten
 - [ ] Sound effect when eating / getting eaten
 
