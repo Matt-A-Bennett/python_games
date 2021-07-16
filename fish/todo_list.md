@@ -2,6 +2,7 @@ Original game: https://www.newgrounds.com/portal/view/319993
 
 ## General
 - [ ] Make speed adapt to window size 
+- [ ] Make speed not slow down as player fish gets bigger
 
 ## AI fish
 - [x] Fish should have different sizes
