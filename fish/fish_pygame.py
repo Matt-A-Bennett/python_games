@@ -70,8 +70,13 @@ class Fish_AI():
         else:
             return None
 
-    def update(self):
-        self.rect = self.rect.move(self.speed)
+
+    def calculate_movement(self, screen_size, elapsed_time):
+        return [((screen_size*val)/100)*elapsed_time for val in self.speed]
+
+
+    def update(self, distance_pix):
+        self.rect = self.rect.move(distance_pix)
 
 class FishPlayer():
     def __init__(self, path):
@@ -268,6 +273,7 @@ school_of_fish = []
 for fish_idx in range(n_fish):
     school_of_fish.append(Fish_AI(path, width, height))
 
+pre_time = time.time()
 # GAME LOOP
 while True:
     pg.event.pump()
@@ -301,7 +307,8 @@ while True:
     # update all the AI fish
     for fish_idx in range(n_fish):
         tmp_fish = school_of_fish[fish_idx]
-        tmp_fish.update()
+        elapsed_time = time.time() - pre_time
+        tmp_fish.update(tmp_fish.calculate_movement(width, elapsed_time))
 
         if (tmp_fish.rect[0] < -150) or (tmp_fish.rect[0] > width) or (tmp_fish.rect[1] < -150) or (tmp_fish.rect[1] > height):
             school_of_fish[fish_idx] = Fish_AI(path, width, height)
@@ -318,6 +325,7 @@ while True:
             sys.exit()
 
         screen.blit(tmp_fish.fish, tmp_fish.rect)
+    pre_time = time.time()
 
     # add some friction
     player.speed[0] = player.speed[0]*friction_coef
