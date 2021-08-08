@@ -20,5 +20,6 @@ Original game: https://www.newgrounds.com/portal/view/319993
 - [ ] Sound effect when eating / getting eaten
 
 ## Extra
+- [ ] Sound effects
 - [ ] COOL LOGO 
 - [x] Background music (GUILE'S THEME)
